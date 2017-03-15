@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+	<head>
+	<meta charset="UTF-8">
+		<title>Radmarathon in Sölden</title>
+	</head>
+	<body style="background-color:grey"><h1>Ötztaler Radmarathon</h1>
+	<img src="https://www.oetztaler-radmarathon.com/urlaub/images/ORM/hoehenprofil,method=render,prop=data.jpg" alt=Höhenprofil/>
+		<h1>Die Strecke</h1>
+		<p>Distanz: 238km</p>
+		<a href="https://www.oetztaler-radmarathon.com/de">Link zum Ötztaler Radmarathon</a>
+	<h2>Pässe</h2>
+	<ol>
+		<li><strong>Kühtai</strong></li>
+		<li><strong>Brennerpass</strong></li>
+		<li><strong>Jaufenpass</strong></li>
+		<li><strong>Timmelsjoch</strong></li>
+	</ol>
+	<h2>Größte Städte die durchquert werden</h2>
+	<ul>
+	    <li><em>Sölden</em></li>
+	    <li><em>Innsbruck</em></li>
+	    <li><em>Sterzing</em></li>
+	    <li><em>St. Leonhard i. Passeiertal</em></li>
+	</ul>
+	</body>
+</html>
