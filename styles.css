@@ -9,6 +9,9 @@
 			font-weight:bold
 			
 		}
+		#abbildung1 {
+			background-color: lime;
+		}
 		h1 {
 			text-align:center;
 			font-size:80px;
