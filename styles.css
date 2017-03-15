@@ -1,6 +1,13 @@
+/* mein erstes Stylesheet*/
+
 <style>
 		body {
 			font-family : sans-serif;
+		}
+		.wichtig {
+			color:red;
+			font-weight:bold
+			
 		}
 		h1 {
 			text-align:center;
