@@ -82,8 +82,18 @@
 
         // leaflet-hash aktivieren
         var hash = new L.Hash(map);
+		// Etappe laden
 		L.geoJSON(window.etappe22).addTo(map);
-
+		// Icons von mapsmarker
+		var huts = [
+			L.marker([47.168333, 10.403056], { title: "Ansbacher Hütte", icon: L.icon({ iconUrl: 'icons/cabin-2.png'}) }),
+			L.marker([47.200278, 10.478333], { title: "Memminger Hütte", icon: L.icon({ iconUrl: 'icons/cabin-2.png'}) })
+		];
+		var hutsLayer = L.featureGroup();
+		for (var i=0; i<huts.length; i++) {
+			hutsLayer.addLayer(huts[i]);
+		}
+		hutsLayer.addTo(map);
     </script>
 
 </body>
