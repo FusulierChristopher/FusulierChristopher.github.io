@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+
+    <title>basemap.at mit leaflet-hash Plugin</title>
+
+    <link rel="stylesheet" href="js/leaflet/leaflet.css" />
+	<link rel="stylesheet" href="js/leaflet-elevation/leaflet.elevation-0.0.4.css" />
+    <script src="js/leaflet/leaflet.js"></script>
+    <script src="js/leaflet-hash/leaflet-hash.js"></script>
+	<script src="js/leaflet-elevation/leaflet.elevation-0.0.4.min.js"></script>
+	<script src="https://d3js.org/d3.v3.min.js" charset="utf-8"></script>
+	<script src='https://api.mapbox.com/mapbox.js/plugins/leaflet-omnivore/v0.2.0/leaflet-omnivore.min.js'></script>
+
+    <style>
+        body {
+            padding: 15px;
+            margin: 15px;
+        }
+        html, body, #map {
+            height: 600px;
+            width: 1024px;
+        }
+    </style>
+</head>
+
+<body>
+	<h3>Adlerweg-Etappe 22: Memminger Hütte - Ansbacher Hütte</h3>
+	<p>Tobel sind tiefe, schluchtartige Einschnitte in Steilhängen oder stark eingetiefte Täler eines Wildbaches. Man wird solche Tobel bei dieser Etappe öfters passieren, auch hat man wieder Scharten, Jöcher, steile Wiesenflanken und Schuttreisen zu bewältigen, aber dabei immer ein herrliches Panorama vor Augen. Zuerst zieht der Weg in abschüssigem Gelände hinunter ins Parseiertal. Die Höhenmeter macht man wieder wett beim Aufstieg ins Langkar und zur Grießlscharte. Nach dem Winterjöchl führt der Weg hinter dem Stierkopf vorbei und felsig empor zur Kopfscharte. Von hier durch Grashänge in Richtung Süden zur Ansbacher Hütte. </p>
+    <div id="map"></div>
+
+    <script>
+        // WMTS-Layer basemap.at - Quelle: http://www.basemap.at/wmts/1.0.0/WMTSCapabilities.xml
+        var layers = {
+            geolandbasemap: L.tileLayer("https://{s}.wien.gv.at/basemap/geolandbasemap/normal/google3857/{z}/{y}/{x}.png", {
+                subdomains: ['maps', 'maps1', 'maps2', 'maps3', 'maps4'],
+                attribution: 'Datenquelle: <a href="http://www.basemap.at/">basemap.at</a>'
+            }),
+            bmapgrau: L.tileLayer("https://{s}.wien.gv.at/basemap/bmapgrau/normal/google3857/{z}/{y}/{x}.png", {
+                subdomains: ['maps', 'maps1', 'maps2', 'maps3', 'maps4'],
+                attribution: 'Datenquelle: <a href="http://www.basemap.at/">basemap.at</a>'
+            }),
+            bmapoverlay: L.tileLayer("https://{s}.wien.gv.at/basemap/bmapoverlay/normal/google3857/{z}/{y}/{x}.png", {
+                subdomains: ['maps', 'maps1', 'maps2', 'maps3', 'maps4'],
+                attribution: 'Datenquelle: <a href="http://www.basemap.at/">basemap.at</a>'
+            }),
+            bmaphidpi: L.tileLayer("https://{s}.wien.gv.at/basemap/bmaphidpi/normal/google3857/{z}/{y}/{x}.jpeg", {
+                subdomains: ['maps', 'maps1', 'maps2', 'maps3', 'maps4'],
+                attribution: 'Datenquelle: <a href="http://www.basemap.at/">basemap.at</a>'
+            }),
+            bmaporthofoto30cm: L.tileLayer("https://{s}.wien.gv.at/basemap/bmaporthofoto30cm/normal/google3857/{z}/{y}/{x}.jpeg", {
+                subdomains: ['maps', 'maps1', 'maps2', 'maps3', 'maps4'],
+                attribution: 'Datenquelle: <a href="http://www.basemap.at/">basemap.at</a>'
+            }),
+            osm: L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                subdomains: ['a', 'b', 'c'],
+                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+            })
+        };
+
+        // Karte definieren
+        var map = L.map('map', {
+            layers: [layers.geolandbasemap],
+            center : [47.654, 13.370],
+            zoom : 8
+        });
+
+        // Maßstab hinzufügen
+        L.control.scale({
+            maxWidth: 200,
+            metric: true,
+            imperial: false
+        }).addTo(map);
+			// Höhenprofil control hinzufügen
+		var profileControl = L.control.elevation({
+		    position : 'bottomleft',
+		    theme : 'purple-theme'
+	    });
+	    profileControl.addTo(map);
+
+	    // GPX Track laden
+	    gpxTrack = omnivore.gpx('Data/AdlerwegEtappe22.gpx').addTo(map);
+		
+	    // nach erfolgreichem Laden Popup hinzufügen, Ausschnitt setzen und Höhenprofil erzeugen
+	    gpxTrack.on('ready', function () {
+	    // Popup hinzufügen
+	   var markup = '<h3>Adlerweg-Etappe 22: Memminger Hütte - Ansbacher Hütte</h3>';
+	   markup += '<p>Tobel sind tiefe, schluchtartige Einschnitte in Steilhängen oder stark eingetiefte Täler eines Wildbaches. Man wird solche Tobel bei dieser Etappe öfters passieren, auch hat man wieder Scharten, Jöcher, steile Wiesenflanken und Schuttreisen zu bewältigen, aber dabei immer ein herrliches Panorama vor Augen. Zuerst zieht der Weg in abschüssigem Gelände hinunter ins Parseiertal. Die Höhenmeter macht man wieder wett beim Aufstieg ins Langkar und zur Grießlscharte. Nach dem Winterjöchl führt der Weg hinter dem Stierkopf vorbei und felsig empor zur Kopfscharte. Von hier durch Grashänge in Richtung Süden zur Ansbacher Hütte. </p>'
+	               markup += '<li>Ausgangspunkt: Memminger Hütte</li>';
+	               markup += '<li>Endpunkt: Ansbacher Hütte</li>';
+	               markup += '<li>Höhenmeter bergauf: 1040</li>';
+	               markup += '<li>Höhenmeter bergab: 900</li>';
+	               markup += '<li>Höchster Punkt: 2620</li>';
+	               markup += '<li>Schwierigkeitsgrad: schwierig</li>';
+	               markup += '<li>Streckenlänge (in km): 10</li>';
+	               markup += '<li>Gehzeit (in Stunden): 6</li>';
+	               markup += '<li>Einkehrmöglichkeiten: Memminger Hütte, Ansbacher Hütte</li>';
+	               markup += '<li><a href="http://www.tirol.at/reisefuehrer/sport/wandern/wandertouren/a-adlerweg-etappe-22-memminger-huette-ansbacher-huette">Weitere Informationen</a></li>';
+	               gpxTrack.bindPopup(markup, { maxWidth : 450 });
+
+	               // Ausschnitt setzen
+	               map.fitBounds(gpxTrack.getBounds());
+
+	               // Höhenprofil erzeugen
+	               gpxTrack.eachLayer(function(layer) {
+	                   profileControl.addData(layer.feature);
+	               });
+	           });
+	   // leaflet-hash aktivieren
+	           var hash = new L.Hash(map);
+		
+
+	   		var huts = L.icon({
+	   			iconUrl: 'icons/cabin-2.png',
+	   			iconAnchor: [16, 37]		
+	   		});
+	   		L.featureGroup([
+	   			L.marker ([47.200278, 10.478333], { title: "Memminger Hütte", icon: huts } ),
+	   			L.marker ([47.168333, 10.403056], { title: "Ansbacher Hütte", icon: huts} )
+	   		]).addTo(map);
+		
+
+	   		var start = L.icon({
+	   			iconUrl: 'icons/dogs_leash.png',
+	   			iconAnchor: [16, 37]
+	   		});
+	   		L.marker([47.20055, 10.478617], { title: "Start Etappe 22", icon: start}).addTo(map);
+		
+	   		var end = L.icon({
+	   			iconUrl: 'icons/flag-export.png',
+	   			iconAnchor: [16, 37]
+	   		});
+	   		L.marker([47.168333, 10.403333], { title: "Ziel Etappe 22", icon: end}).addTo(map);	
+
+        // WMTS-Layer Auswahl hinzufügen
+        var layerControl = L.control.layers({
+            "basemap.at - STANDARD": layers.geolandbasemap,
+            "basemap.at - GRAU": layers.bmapgrau,
+            "basemap.at - OVERLAY": layers.bmapoverlay,
+            "basemap.at - HIGH-DPI": layers.bmaphidpi,
+            "basemap.at - ORTHOFOTO": layers.bmaporthofoto30cm,
+            "OpenStreetMap": layers.osm,
+			}, {
+			"Adlerweg Etappe 22" : gpxTrack
+        }).addTo(map);
+    </script>
+<h4><a href="https://github.com/fusulierchristopher">Autor: Christopher Fusulier</a></h4>
+</body>
+
+</html>
