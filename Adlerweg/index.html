@@ -24,6 +24,10 @@
             height: 600px;
             width: 1024px;
         }
+		#map {
+			height: 400px;
+			width: 1000px;
+		}
     </style>
 </head>
 
@@ -31,6 +35,33 @@
 	<h3>Adlerweg-Etappe 22: Memminger Hütte - Ansbacher Hütte</h3>
 	<p>Tobel sind tiefe, schluchtartige Einschnitte in Steilhängen oder stark eingetiefte Täler eines Wildbaches. Man wird solche Tobel bei dieser Etappe öfters passieren, auch hat man wieder Scharten, Jöcher, steile Wiesenflanken und Schuttreisen zu bewältigen, aber dabei immer ein herrliches Panorama vor Augen. Zuerst zieht der Weg in abschüssigem Gelände hinunter ins Parseiertal. Die Höhenmeter macht man wieder wett beim Aufstieg ins Langkar und zur Grießlscharte. Nach dem Winterjöchl führt der Weg hinter dem Stierkopf vorbei und felsig empor zur Kopfscharte. Von hier durch Grashänge in Richtung Süden zur Ansbacher Hütte. </p>
     <div id="map"></div>
+	<select id="etappen">
+	<option value="AdlerwegEtappe01.gpx">Adlerweg Etappe 1</option>
+	<option value="AdlerwegEtappe02.gpx">Adlerweg Etappe 2</option>
+	<option value="AdlerwegEtappe03.gpx">Adlerweg Etappe 3</option>
+	<option value="AdlerwegEtappe04.gpx">Adlerweg Etappe 4</option>
+	<option value="AdlerwegEtappe05.gpx">Adlerweg Etappe 5</option>
+	<option value="AdlerwegEtappe06.gpx">Adlerweg Etappe 6</option>
+	<option value="AdlerwegEtappe07.gpx">Adlerweg Etappe 7</option>
+	<option value="AdlerwegEtappe08.gpx">Adlerweg Etappe 8</option>
+	<option value="AdlerwegEtappe09.gpx">Adlerweg Etappe 9</option>
+	<option value="AdlerwegEtappe10.gpx">Adlerweg Etappe 10</option>
+	<option value="AdlerwegEtappe11.gpx">Adlerweg Etappe 11</option>
+	<option value="AdlerwegEtappe12.gpx">Adlerweg Etappe 12</option>
+	<option value="AdlerwegEtappe13.gpx">Adlerweg Etappe 13</option>
+	<option value="AdlerwegEtappe14.gpx">Adlerweg Etappe 14</option>
+	<option value="AdlerwegEtappe15.gpx">Adlerweg Etappe 15</option>
+	<option value="AdlerwegEtappe16.gpx">Adlerweg Etappe 16</option>
+	<option value="AdlerwegEtappe17.gpx">Adlerweg Etappe 17</option>
+	<option value="AdlerwegEtappe18.gpx">Adlerweg Etappe 18</option>
+	<option value="AdlerwegEtappe19.gpx">Adlerweg Etappe 19</option>
+	<option value="AdlerwegEtappe20.gpx">Adlerweg Etappe 20</option>
+	<option value="AdlerwegEtappe21.gpx">Adlerweg Etappe 21</option>
+	<option value="AdlerwegEtappe22.gpx">Adlerweg Etappe 22</option>
+	<option value="AdlerwegEtappe23.gpx">Adlerweg Etappe 23</option>
+	<option value="AdlerwegEtappe24.gpx">Adlerweg Etappe 24</option>
+	<option value="AdlerwegEtappe25.gpx">Adlerweg Etappe 25</option>
+	</select>
 
     <script>
         // WMTS-Layer basemap.at - Quelle: http://www.basemap.at/wmts/1.0.0/WMTSCapabilities.xml
@@ -80,12 +111,13 @@
 		    theme : 'purple-theme'
 	    });
 	    profileControl.addTo(map);
-
-	    // GPX Track laden
-	    gpxTrack = omnivore.gpx('Data/AdlerwegEtappe22.gpx').addTo(map);
 		
-	    // nach erfolgreichem Laden Popup hinzufügen, Ausschnitt setzen und Höhenprofil erzeugen
-	    gpxTrack.on('ready', function () {
+		function loadTrack(track) {
+	    // GPX Track laden
+	    gpxTrack = omnivore.gpx('Data/'+track).addTo(map);
+		console.log(track);
+		// nach erfolgreichem Laden Popup hinzufügen, Ausschnitt setzen und Höhenprofil erzeugen
+	   gpxTrack.on('ready', function () {
 	    // Popup hinzufügen
 	   var markup = '<h3>Adlerweg-Etappe 22: Memminger Hütte - Ansbacher Hütte</h3>';
 	   markup += '<p>Tobel sind tiefe, schluchtartige Einschnitte in Steilhängen oder stark eingetiefte Täler eines Wildbaches. Man wird solche Tobel bei dieser Etappe öfters passieren, auch hat man wieder Scharten, Jöcher, steile Wiesenflanken und Schuttreisen zu bewältigen, aber dabei immer ein herrliches Panorama vor Augen. Zuerst zieht der Weg in abschüssigem Gelände hinunter ins Parseiertal. Die Höhenmeter macht man wieder wett beim Aufstieg ins Langkar und zur Grießlscharte. Nach dem Winterjöchl führt der Weg hinter dem Stierkopf vorbei und felsig empor zur Kopfscharte. Von hier durch Grashänge in Richtung Süden zur Ansbacher Hütte. </p>'
@@ -105,10 +137,74 @@
 	               map.fitBounds(gpxTrack.getBounds());
 
 	               // Höhenprofil erzeugen
+				   profileControl.clear();
 	               gpxTrack.eachLayer(function(layer) {
 	                   profileControl.addData(layer.feature);
+						//console.log(layer.feature.geometry.coordinates;
+						var pts = layer.feature.geometry.coordinates;
+					   
+						for (var i= 1; i < pts.length; i +=1) {
+							//console.log(pts[i]); //aktuelle Punkt
+							//console.log(pts[i-1]); //vorhergehender Punkt
+							
+							// Entfernung bestimmen
+							var dist = map.distance (
+								[ pts[i][1],pts[i][0] ],
+								[ pts[i-1][1],pts[i-1][0] ]
+							).toFixed(0);
+						//console.log(dist);
+						
+						var delta = pts[i][2] - pts[i-1][2];
+						//console.log(delta, "Höhenmeter auf",dist,"m Strecke");
+						
+						var rad = Math.atan(delta/dist);
+						var deg = (rad * (180 / Math.PI)).toFixed(1);
+						//console.log(deg);
+						
+						//var rot = ["#ab2524", "#a02128", "#a1232b", #8d1d2c", "#701f29", "#5e2028"];
+						//var gruen = ["#42EB00", "#38C400", "#288F00", "#195700", "#0A2400"];
+						
+						//rot http://colorbrewer2.org/?type=sequential&scheme=YlOrRd&n=6['#ffffb2','#fed976','#feb24c','#fd8d3c','#f03b20','#bd0026']
+						
+						//grün http://colorbrewer2.org/?type=sequential&scheme=YlGn&n=6['#ffffcc','#d9f0a3','#addd8e','#78c679','#31a354','#006837']
+						var farbe;
+						switch(true) { // checks if condition is true, not for certain values of a variable
+							case (deg >= 20) :  farbe = "#bd0026"; break;
+							case (deg >= 15) :  farbe = "#f03b20"; break;
+							case (deg >= 10) :  farbe = "#fd8d3c"; break;
+							case (deg >= 5) :  farbe = "#feb24c"; break;
+							case (deg >= 1) :  farbe = "#fed976"; break;
+							case (deg >= -1) :  farbe = "yellow"; break;
+							case (deg >= -5) :  farbe = "#d9f0a3"; break;
+							case (deg >=-10) :  farbe = "#addd8e"; break;
+							case (deg >=-15) :  farbe = "#78c679"; break;
+							case (deg >= -20) :  farbe = "#31a354"; break;
+							case (deg < -20) :  farbe = "#006837"; break;
+						}
+						//console.log(deg,farbe);
+						
+						
+						 //Linie zeichnen 
+						var pointA = new L.LatLng(pts[i][1],pts[i][0]);
+						var pointB = new L.LatLng(pts[i-1][1],pts[i-1][0]);
+						var pointList = [pointA, pointB];
+   
+						var firstpolyline = new L.Polyline(pointList, {
+							color: farbe,
+							weight: 6,
+							opacity: 1.0,
+							smoothFactor: 1
+
+						});
+    
+						firstpolyline.addTo(map);
+						
+						}
 	               });
 	           });
+		}  //end function loadTrack
+	 
+	 
 	   // leaflet-hash aktivieren
 	           var hash = new L.Hash(map);
 		
@@ -143,9 +239,18 @@
             "basemap.at - HIGH-DPI": layers.bmaphidpi,
             "basemap.at - ORTHOFOTO": layers.bmaporthofoto30cm,
             "OpenStreetMap": layers.osm,
-			}, {
-			"Adlerweg Etappe 22" : gpxTrack
         }).addTo(map);
+		
+		//zwischen den Etappen hin uind her schalten
+		var etappenSelektor = document.getElementById("etappen");
+		//console.log("Selektor", etappenSelektor);
+		etappenSelektor.onchange = function(evt) {
+			console.log("Change event:", evt);
+			console.log("GPX Track laden", etappenSelektor[etappenSelektor.selectedIndex].value);
+			loadTrack(etappenSelektor[etappenSelektor.selectedIndex].value);
+		}
+		loadTrack("AdlerwegEtappe01.gpx");
+		
     </script>
 <h4><a href="https://github.com/fusulierchristopher">Autor: Christopher Fusulier</a></h4>
 </body>
