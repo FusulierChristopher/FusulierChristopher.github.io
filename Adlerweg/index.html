@@ -76,7 +76,7 @@
         }).addTo(map);
 			// Höhenprofil control hinzufügen
 		var profileControl = L.control.elevation({
-		    position : 'bottomright',
+		    position : 'bottomleft',
 		    theme : 'purple-theme'
 	    });
 	    profileControl.addTo(map);
@@ -114,7 +114,7 @@
 		
 
 	   		var huts = L.icon({
-	   			iconUrl: 'icons/hut.png',
+	   			iconUrl: 'icons/cabin-2.png',
 	   			iconAnchor: [16, 37]		
 	   		});
 	   		L.featureGroup([
@@ -135,7 +135,7 @@
 	   		});
 	   		L.marker([47.168333, 10.403333], { title: "Ziel Etappe 22", icon: end}).addTo(map);	
 
-        // WMTS-Layer Auswahl hinzuf�gen
+        // WMTS-Layer Auswahl hinzufügen
         var layerControl = L.control.layers({
             "basemap.at - STANDARD": layers.geolandbasemap,
             "basemap.at - GRAU": layers.bmapgrau,
